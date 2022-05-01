@@ -4,10 +4,10 @@ metadata:
   name: ingress-service
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
-    - host: testk8s.dev
+    - host: ticketing.com
       http:
         paths:
           - path: /api/users/?(.*)
@@ -16,4 +16,4 @@ spec:
               service:
                 name: auth-srv
                 port:
-                  number: 4000
+                  number: 3000

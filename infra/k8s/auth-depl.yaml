@@ -18,7 +18,7 @@ spec:
 ---
 apiVersion: v1
 kind: Service
-metadata: 
+metadata:
   name: auth-srv
 spec:
   selector:
@@ -26,5 +26,5 @@ spec:
   ports:
     - name: auth
       protocol: TCP
-      port: 4000
-      targetPort: 4000
+      port: 3000
+      targetPort: 3000

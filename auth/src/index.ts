@@ -9,11 +9,11 @@ import { errorHandler } from './middlewares/error-handler';
 import { NotFoundError } from './errors';
 
 const app = express();
-app.set('trust proxy', true);
+// app.set('trust proxy', true);
 app.use(json());
 app.use(cookieSession({
     signed: false,
-    secure: true,
+    // secure: true,
 }));
 app.get('/api/users/currentuser', (req, res) => {  res.send('Hi there');});
 
@@ -30,6 +30,11 @@ app.use(errorHandler);
 
 
 const start = async () => {
+
+    if (!process.env.JWT_KEY) {
+        throw new Error('JWT_KEY must be defined');
+    }
+
     const url = "mongodb://auth-mongo-srv:27017/auth"
     try {
         await mongoose.connect(url);

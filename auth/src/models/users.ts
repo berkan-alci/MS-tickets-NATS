@@ -28,6 +28,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
+}, {
+    toJSON: {
+        transform(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.password;
+        },
+        versionKey: false,
+    }
 });
 
 //Middleware function for mongoose + normal function so 'this' refers to doc, not whole file.

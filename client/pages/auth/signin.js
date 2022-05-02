@@ -1,7 +1,7 @@
 export default () => {
     return (
         <div>
-            Banana page
+            Sigin
         </div>
     );
 }

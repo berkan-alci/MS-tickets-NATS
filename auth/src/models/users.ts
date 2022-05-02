@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import { PasswordHashAndCompare } from '../helpers';
 // Interface to describe properties for creating a user
 interface UserAttrs {
     email: string;
@@ -28,6 +28,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
+});
+
+//Middleware function for mongoose + normal function so 'this' refers to doc, not whole file.
+userSchema.pre('save', async function (done) {
+    if (this.isModified('password')) {
+        const hashed = await PasswordHashAndCompare.toHash(this.get('password'));
+        this.set('password', hashed);
+    }
+    done();
 });
 
 // Adding the build static function to replace new User (mongoose official docs)

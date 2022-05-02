@@ -27,8 +27,6 @@ router.post('/api/users/signup', [
         throw new InvalidRequestError('Email already in use!');
     }
 
-    // password hashing
-
     const user = User.build({ email, password });
 
     try {

@@ -28,6 +28,7 @@ const start = async () => {
     const url = "mongodb://auth-mongo-srv:27017/auth"
     try {
         await mongoose.connect(url);
+        console.log('Connected to MongoDB - AUTH')
     } catch (err) {
         console.log(err);
     }

@@ -1,14 +1,15 @@
 import axios from "axios";
 import { useState } from 'react';
 
-export default ({ url, method, body }) => {
+export default ({ url, method, body, onSuccess }) => {
     const [errors, setErrors] = useState(null);
 
-    let pending = true;
     const request = async () => {
         try {
             const response = await axios[method](`http://ticketing.com${url}`, body);
-            pending = false;
+            if (onSuccess) {
+                onSuccess(response.data)
+            };
             return response.data;
         } catch (err) {
             setErrors(
@@ -22,5 +23,5 @@ export default ({ url, method, body }) => {
         };
     };
 
-    return { request, pending, errors };
+    return { request, errors };
 };

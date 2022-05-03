@@ -2,8 +2,7 @@ import express, {Request, Response} from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
-import { InvalidRequestError } from '../errors';
-import { validateRequest } from '../middlewares/validate-requests';
+import { InvalidRequestError, validateRequest } from '@tt-ms-common/common';
 import { User } from '../models';
 import { PasswordHashAndCompare } from '../helpers';
 

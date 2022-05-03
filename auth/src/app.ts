@@ -4,8 +4,8 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
 import { currentUserRouter, signInRouter, signUpRouter, signOutRouter } from './routes';
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from './errors';
+import { errorHandler, NotFoundError } from '@tt-ms-common/common';
+
 
 
 const app = express();

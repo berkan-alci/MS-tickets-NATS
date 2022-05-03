@@ -1,7 +1,15 @@
-export default () => {
+import axios from 'axios';
+
+const LandingPage = () => {
     return (
         <div>
-            Landing page
+            Enter
         </div>
     );
-}
+};
+
+LandingPage.getInitialProps = () => {
+
+};
+
+export default LandingPage;

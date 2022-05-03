@@ -7,6 +7,7 @@ import { currentUserRouter, signInRouter, signUpRouter, signOutRouter } from './
 import { errorHandler } from './middlewares/error-handler';
 import { NotFoundError } from './errors';
 
+
 const app = express();
 app.set('trust proxy', true);
 app.use(json());

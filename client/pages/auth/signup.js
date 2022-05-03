@@ -1,20 +1,25 @@
 import { useState } from "react";
 import axios from 'axios';
+import { useRequest } from "../../hooks";
+
+
 
 export default () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState([]);
+
+    const config = {
+        url: '/api/users/signup',
+        method: 'post',
+        body: { email, password },
+    };
+    const { request, errors } = useRequest(config)
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            const res = await axios.post('http://ticketing.com/api/users/signup', { email, password });
-            console.log(res.data);
-        } catch (err) {
-            setErrors(err.response.data.errors);
-        }
+        request();
+
 
     }
 
@@ -29,13 +34,7 @@ export default () => {
                 <label>Password:</label>
                 <input value={password} onChange={e => setPassword(e.target.value)} className="form-control" type="password" />
             </div>
-            {errors.length > 0 && (<div className="alert alert-danger">
-                <h4 className="my-0">Oops something went wrong ...</h4>
-                {errors.map((e) => (
-                    <li key={e.message}>{e.message}</li>
-                ))}
-            </div>)}
-
+            {errors}
             <button className="btn btn-primary">Sign Up</button>
         </form>
     );

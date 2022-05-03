@@ -3,8 +3,8 @@ import 'express-async-errors';
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
-import { errorHandler, NotFoundError } from '@tt-ms-common/common';
-
+import { errorHandler, NotFoundError, currentUser } from '@tt-ms-common/common';
+import { createTicketRouter } from './routes';
 
 
 const app = express();
@@ -15,6 +15,11 @@ app.use(cookieSession({
     secure: false,
 }));
 
+//middlewares
+app.use(currentUser);
+
+//routes
+app.use(createTicketRouter);
 
 app.all('*', async (req, res, next) => {
     throw new NotFoundError();

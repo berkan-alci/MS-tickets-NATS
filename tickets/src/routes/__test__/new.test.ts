@@ -1,40 +1,59 @@
 import request from 'supertest';
 import { app } from '../../app';
-import { getAuthCookie } from '@tt-ms-common/common';
 
-it('route handler listening to /api/tickets for post requests', async () => {
-    const res = await request(app)
-        .post('/api/tickets')
-        .send({});
-    
-    expect(res.status).not.toEqual(404);
-});
-
-it('can only be accessed if user is signed in', async () => {
-    const res = await request(app)
-        .post('/api/tickets')
-        .send({})
-    
-    expect(res.status).toEqual(401);
-    
-});
-
-it('returns other status code if user is signed in', async () => {
-    const cookie = await getAuthCookie();
-    const res = await request(app)
-        .post('/api/tickets')
-        .set('Cookie', cookie)
-        .send({});
-    console.log(res);
-    
-    expect(res.status).not.toEqual(401);
-    
-});
-
-it('returns an error if invalid price is provided', async () => {
-    
-});
-
-it('creates a ticket with valid input params', async () => {
-    
-});
+it('has a route handler listening to /api/tickets for post requests', async () => {
+    const response = await request(app).post('/api/tickets').send({});
+  
+    expect(response.status).not.toEqual(404);
+  });
+  
+  it('can only be accessed if the user is signed in', async () => {
+    await request(app).post('/api/tickets').send({}).expect(401);
+  });
+  
+  it('returns a status other than 401 if the user is signed in', async () => {
+    const response = await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({});
+  
+    expect(response.status).not.toEqual(401);
+  });
+  
+  it('returns an error if an invalid title is provided', async () => {
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({
+        title: '',
+        price: 10,
+      })
+      .expect(400);
+  
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({
+        price: 10,
+      })
+      .expect(400);
+  });
+  
+  it('returns an error if an invalid price is provided', async () => {
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({
+        title: 'asldkjf',
+        price: -10,
+      })
+      .expect(400);
+  
+    await request(app)
+      .post('/api/tickets')
+      .set('Cookie', global.signin())
+      .send({
+        title: 'laskdfj',
+      })
+      .expect(400);
+  });

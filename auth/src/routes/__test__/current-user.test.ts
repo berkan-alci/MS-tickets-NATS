@@ -1,10 +1,9 @@
 import request from 'supertest';
-import { getAuthCookie } from '@tt-ms-common/common';
 import { app } from '../../app';
 
 it('responds with details about current user', async () => {
   
-    const cookie = await getAuthCookie();
+    const cookie = await global.signin();
 
     const res = await request(app)
         .get('/api/users/currentuser')

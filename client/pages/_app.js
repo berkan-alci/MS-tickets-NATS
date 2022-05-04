@@ -1,9 +1,29 @@
 import 'bootstrap/dist/css/bootstrap.css';
-
 import React from 'react';
+import buildClient from '../api/build-client';
+import Header from '../components/Header';
 
-const _app = ({ Component, pageProps }) => {
-    return <Component {...pageProps} />
+const AppComponent = ({ Component, pageProps, currentUser }) => {
+    return (
+        <div>
+            <Header currentUser={currentUser} />
+            <Component {...pageProps} />
+        </div>
+
+    )
 };
 
-export default _app
+AppComponent.getInitialProps = async (appContext) => {
+    const { data } = await buildClient(appContext.ctx).get('/api/users/currentuser');
+    let pageProps = {};
+    if (appContext.Component.getInitialProps) {
+        pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+    }
+
+    return {
+        pageProps,
+        ...data,
+    }
+}
+
+export default AppComponent

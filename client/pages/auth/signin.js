@@ -1,20 +1,27 @@
 import { useState } from "react";
-import axios from 'axios';
+import Router from 'next/router'
+import { useRequest } from "../../hooks";
 
 export default () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const config = {
+        url: '/api/users/signin',
+        method: 'post',
+        body: { email, password },
+        onSuccess: () => Router.push('/')
+    };
+    const { request, errors } = useRequest(config)
+
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        const res = await axios.post('http://ticketing.com/api/users/signin', { email, password });
-
+        request();
     }
 
     return (
         <form onSubmit={onSubmit}>
-            <h1>Sign In</h1>
+            <h1>Sign in</h1>
             <div className="form-group">
                 <label>Email:</label>
                 <input value={email} onChange={e => setEmail(e.target.value)} className="form-control" type="email" />
@@ -23,7 +30,8 @@ export default () => {
                 <label>Password:</label>
                 <input value={password} onChange={e => setPassword(e.target.value)} className="form-control" type="password" />
             </div>
-            <button className="btn btn-primary">Sign Up</button>
+            {errors}
+            <button className="btn btn-primary">Sign in</button>
         </form>
     );
 }

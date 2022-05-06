@@ -19,7 +19,10 @@ In regards on how we interact with these microservices the choice for SSR (Next.
 -   Go to root of directory and run `skaffold dev`.
 -   Go to http://ticketing.com **Note: click on the browser and type "thisisunsafe" if accessing via localhost**
 
+## Architecture diagrams & info:
+
 ## Additional info:
 
 -   Go inside the microservice you want to run tests and run `npm run test`
 -   The common library can be found here: https://github.com/berkan-alci/tt-ms-common or https://www.npmjs.com/package/@tt-ms-common/common
+-   the "nats-test" directory is not used in the project. it's simply a short explanation (in code) how to utilize the nats streaming server.

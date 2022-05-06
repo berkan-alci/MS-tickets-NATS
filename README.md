@@ -17,6 +17,7 @@ In regards on how we interact with these microservices the choice for SSR (Next.
 -   Get the ingress NGINX controller: `https://kubernetes.github.io/ingress-nginx/deploy/` **Note: this will not work with minikube.**
 -   Go to your hosts file and add : `127.0.0.1 ticketing.com` **Note: this is if you're running it on your local environment. If you're running it in the cloud go to ingress-srv.yaml and change the host `host: ticketing.com` to whatever you use.**
 -   Go to root of directory and run `skaffold dev`.
+-   Go to http://ticketing.com **Note: click on the browser and type "thisisunsafe" if accessing via localhost**
 
 ## Additional info:
 

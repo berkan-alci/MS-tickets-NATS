@@ -4,7 +4,7 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
 import { errorHandler, NotFoundError, currentUser } from '@tt-ms-common/common';
-import { createTicketRouter } from './routes';
+import { allTicketRouter, createTicketRouter, showTicketRouter, updateTicketRouter } from './routes';
 
 
 const app = express();
@@ -20,6 +20,9 @@ app.use(currentUser);
 
 //routes
 app.use(createTicketRouter);
+app.use(showTicketRouter);
+app.use(allTicketRouter);
+app.use(updateTicketRouter);
 
 app.all('*', async (req, res, next) => {
     throw new NotFoundError();

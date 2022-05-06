@@ -29,7 +29,7 @@ afterAll(async () => {
 }, 150000);
 
 global.signin = () => {
-    const token = jwt.sign({ id: 'testid', email: 'test@test.com' }, process.env.JWT_KEY!)
+    const token = jwt.sign({ id: new mongoose.Types.ObjectId().toHexString(), email: 'test@test.com' }, process.env.JWT_KEY!)
     const sessionJSON = JSON.stringify({ jwt: token });
     const base64 = Buffer.from(sessionJSON).toString('base64');
 

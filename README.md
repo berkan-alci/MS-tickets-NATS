@@ -1,31 +1,24 @@
 # Ticketing tool:
 
-## Description:
+This is a ticketing tool that utilizes a microservice architecture for its backend. The goal of this project is to create a robust backend that has multi-language support. The backend will have a library to minimize code reuse. The project also makes use of the NATS Streaming server to publish/listen to events. I want to note that in this project I took the asynchronous event driven approach. This brings its own challenges compared to the synchronous event driven approach, in this repo you'll find solutions to those problems.
 
-This is a ticket purchasing tool that utilizing a micro backend. It'll have it's own NPM library for shared code. Besides that we'll be using a NATS streaming server as our event bus.
+In regards on how we interact with these microservices the choice for SSR (Next.js) has been made. Utilizing SSR opposed to pure React has its own challenges & requires you to understand the fundamentals of how HTTP requests are made. This added complexity gives us an opportunity to learn and showcase a fundamental understanding of HTTP requests.
+**this project can be used as an example for a deployment ready microservice architecture**
 
-## Front-End:
+## Pre-requisites:
 
-Front-end will be built in react.
+-   Install docker: https://docs.docker.com/get-docker/
+-   Install kubernetes: https://docs.docker.com/desktop/kubernetes/
+-   Install skaffold: https://skaffold.dev/
 
-## Back-end:
+## Installation & Setup guide:
 
-## Setup:
-
-### Prereqs:
-
--   install docker: https://docs.docker.com/get-docker/
--   install kubernetes: https://docs.docker.com/desktop/kubernetes/
--   install skaffold: https://skaffold.dev/
-
-### Running the microservices:
-
--   Pull repo: `git pull https://github.com/berkan-alci/MS-tickets-NATS.git`.
--   Install packages in dependencies: `npm install`. (optional)
--   Get the NGINX Ingress controller: `https://github.com/kubernetes/ingress-nginx/` (THE SETUP I MADE WILL NOT WORK WITH MINIKUBE!!).
+-   Pull repo: `git pull https://github.com/berkan-alci/MS-tickets-NATS.git`
+-   Get the ingress NGINX controller: `https://kubernetes.github.io/ingress-nginx/deploy/` **Note: this will not work with minikube.**
+-   Go to your hosts file and add : `127.0.0.1 ticketing.com` **Note: this is if you're running it on your local environment. If you're running it in the cloud go to ingress-srv.yaml and change the host `host: ticketing.com` to whatever you use.**
 -   Go to root of directory and run `skaffold dev`.
--   Containers should start up in k8s.
 
-### Running the tests (will be streamlined with CI/CD later):
+## Additional info:
 
--   go to /auth and run: `npm run test` locally.
+-   Go inside the microservice you want to run tests and run `npm run test`
+-   The common library can be found here: https://github.com/berkan-alci/tt-ms-common or https://www.npmjs.com/package/@tt-ms-common/common

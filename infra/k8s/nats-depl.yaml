@@ -45,7 +45,7 @@ spec:
   - name: client
     protocol: TCP
     port: 4222
-    targetPort: 8222
+    targetPort: 4222
   - name: monitor
     protocol: TCP
     port: 8222

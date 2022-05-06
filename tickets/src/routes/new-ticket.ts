@@ -3,6 +3,8 @@ import { body } from 'express-validator';
 
 import { requireAuth, validateRequest } from '@tt-ms-common/common';
 import { Ticket } from '../models';
+import { natsWrapper } from '../nats-wrapper';
+import { TicketCreatedPublisher } from '../events';
 const router = express.Router();
 
 router.post('/api/tickets', requireAuth, [
@@ -23,7 +25,12 @@ router.post('/api/tickets', requireAuth, [
     });
 
     await ticket.save();
-
+    new TicketCreatedPublisher(natsWrapper.client).publish({
+        id: ticket.id,
+        userId: ticket.userId,
+        title: ticket.title,
+        price: ticket.price
+    });
     res.status(201).send(ticket);
 });
 

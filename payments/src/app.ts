@@ -4,6 +4,7 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
 import { errorHandler, NotFoundError, currentUser } from '@tt-ms-common/common';
+import { createChargeRouter } from './routes';
 
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(cookieSession({
 app.use(currentUser);
 
 //routes
+app.use(createChargeRouter);
 
 
 app.all('*', async (req, res, next) => {

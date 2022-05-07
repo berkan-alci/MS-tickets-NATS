@@ -3,6 +3,8 @@ import { body } from 'express-validator';
 import mongoose from 'mongoose';
 import { NotFoundError, InvalidRequestError, OrderStatus, requireAuth, validateRequest } from '@tt-ms-common/common';
 import { Ticket, Order } from '../models';
+import { OrderCreatedPublisher } from '../events';
+import { natsWrapper } from '../nats-wrapper';
 
 
 const router = express.Router();
@@ -38,7 +40,16 @@ router.post('/api/orders', requireAuth, [
     });
     
     await order.save();
-    //publish order:created
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+        id: order.id,
+        status: order.status,
+        userId: order.userId,
+        expiresAt: order.expiresAt.toISOString(),
+        ticket: {
+            id: ticket.id,
+            price: ticket.price
+        },
+    });
     res.status(201).send(order);
 });
 

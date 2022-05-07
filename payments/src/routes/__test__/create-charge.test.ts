@@ -59,35 +59,36 @@ it('returns a 400 when purchasing a cancelled order', async () => {
   
 it('returns a 201 with valid inputs', async () => {
     const userId = new mongoose.Types.ObjectId().toHexString();
+    const price = Math.floor(Math.random() * 100000);
     const order = Order.build({
       id: new mongoose.Types.ObjectId().toHexString(),
       userId,
       version: 0,
-      price: 20,
+      price,
       status: OrderStatus.Created,
     });
     await order.save();
-
+  
     await request(app)
-        .post('/api/payments')
-        .set('Cookie', global.signin(userId))
-        .send({
-            token: 'tok_visa',
-            orderId: order.id
-        })
-        .expect(201)
-
-    const chargeOpts = (stripe.charges.create as jest.Mock).mock.calls[0][0];
-    expect(chargeOpts.source).toEqual('tok_visa');
-    expect(chargeOpts.amount).toEqual(20 * 100);
-    expect(chargeOpts.currency).toEqual('usd');
-    
-    const payment = await Payments.findOne({
+      .post('/api/payments')
+      .set('Cookie', global.signin(userId))
+      .send({
+        token: 'tok_visa',
         orderId: order.id,
-        stripeId: chargeOpts.id
-    })
-
-    //because we are using a mock we're expecting it to be null. If you'd use the real API for testing, which is possible, you'd use: not.toBeNull();
-    expect(payment).toBeNull();
-
-});
+      })
+      .expect(201);
+  
+    const stripeCharges = await stripe.charges.list({ limit: 50 });
+    const stripeCharge = stripeCharges.data.find((charge) => {
+      return charge.amount === price * 100;
+    });
+  
+    expect(stripeCharge).toBeDefined();
+    expect(stripeCharge!.currency).toEqual('usd');
+  
+    const payment = await Payments.findOne({
+      orderId: order.id,
+      stripeId: stripeCharge!.id,
+    });
+    expect(payment).not.toBeNull();
+  });

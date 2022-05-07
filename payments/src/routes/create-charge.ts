@@ -4,6 +4,8 @@ import { body } from 'express-validator';
 import { requireAuth, validateRequest, InvalidRequestError, NotFoundError, AuthorizationError, OrderStatus } from '@tt-ms-common/common';
 import { Order, Payments } from '../models';
 import { stripe } from '../stripe';
+import { PaymentCreatedPublisher } from '../events';
+import { natsWrapper } from '../nats-wrapper';
 
 router.post('/api/payments', requireAuth, [
     body('token')
@@ -39,9 +41,15 @@ router.post('/api/payments', requireAuth, [
     const payment = Payments.build({
         orderId,
         stripeId: charge.id
+    }) 
+    await payment.save();
+    await new PaymentCreatedPublisher(natsWrapper.client).publish({
+        id: payment.id,
+        orderId: payment.orderId,
+        stripeId: payment.stripeId
     })
 
-    res.status(201).send({ success: true });
+    res.status(201).send({ id: payment.id });
 })
 
 export default router;

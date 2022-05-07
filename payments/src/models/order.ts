@@ -19,40 +19,36 @@ interface OrderDoc extends mongoose.Document {
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
     build(attrs: OrderAttrs): OrderDoc;
-    findByEvent(data: { id: string, version: number }): Promise<OrderDoc | null>;
 }
 
 const orderSchema = new mongoose.Schema({
     userId: {
-        type: String,
-        required: true
+    type: String,
+    required: true,
     },
     price: {
-        type: Number,
-        required: true
+    type: Number,
+    required: true,
     },
     status: {
-        type: String,
-        required: true,
-        enum: Object.values(OrderStatus)
+    type: String,
+    required: true,
     },
-}, {
+},
+{
     toJSON: {
-        transform(doc, ret) {
-            ret.id = ret._id;
-            delete ret._id;
-        }
-    }
-});
+    transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+    },
+    },
+}
+);
+  
+
 orderSchema.set('versionKey', 'version');
 orderSchema.plugin(updateIfCurrentPlugin);
 
-orderSchema.statics.findByEvent = (data: { id: string, version: number }) => {
-    return Order.findOne({
-        _id: data.id,
-        version: data.version - 1
-    })
-};
 
 orderSchema.statics.build = (attrs: OrderAttrs) => {
     return new Order({

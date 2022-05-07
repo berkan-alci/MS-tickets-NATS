@@ -24,7 +24,7 @@ In regards on how we interact with these microservices the choice for SSR (Next.
 
 ### How the application looks like in a cluster:
 
-![Microservice architecture](readme\Cluster-Diagram.png)
+![Microservice architecture](https://github.com/berkan-alci/MS-tickets-NATS/blob/main/readme/Cluster-Diagram.png)
 
 ### Services and their functionalities
 

@@ -22,6 +22,16 @@ In regards on how we interact with these microservices the choice for SSR (Next.
 
 ## Architecture diagrams & info:
 
+### How the application looks like in a cluster:
+
+![Microservice architecture](readme\Cluster-Diagram.png)
+
+### Services and their functionalities
+
+### All events summarized
+
+### Flow of events: creating ticket -> purchasing one
+
 ## Additional info:
 
 -   Go inside the microservice you want to run tests and run `npm run test`

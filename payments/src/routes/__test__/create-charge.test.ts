@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { OrderStatus } from '@tt-ms-common/common';
 import { app } from '../../app';
-import { Order } from '../../models';
+import { Order, Payments } from '../../models';
 import { stripe } from '../../stripe';
 
 it('returns a 404 when purchasing an order that does not exist', async () => {
@@ -57,7 +57,7 @@ it('returns a 400 when purchasing a cancelled order', async () => {
       .expect(400);
 });
   
-it('returns a 204 with valid inputs', async () => {
+it('returns a 201 with valid inputs', async () => {
     const userId = new mongoose.Types.ObjectId().toHexString();
     const order = Order.build({
       id: new mongoose.Types.ObjectId().toHexString(),
@@ -81,5 +81,13 @@ it('returns a 204 with valid inputs', async () => {
     expect(chargeOpts.source).toEqual('tok_visa');
     expect(chargeOpts.amount).toEqual(20 * 100);
     expect(chargeOpts.currency).toEqual('usd');
+    
+    const payment = await Payments.findOne({
+        orderId: order.id,
+        stripeId: chargeOpts.id
+    })
+
+    //because we are using a mock we're expecting it to be null. If you'd use the real API for testing, which is possible, you'd use: not.toBeNull();
+    expect(payment).toBeNull();
 
 });

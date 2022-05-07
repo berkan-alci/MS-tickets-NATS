@@ -2,8 +2,9 @@ import express, { Request, Response } from 'express';
 const router = express.Router();
 import { body } from 'express-validator';
 import { requireAuth, validateRequest, InvalidRequestError, NotFoundError, AuthorizationError, OrderStatus } from '@tt-ms-common/common';
-import { Order } from '../models';
+import { Order, Payments } from '../models';
 import { stripe } from '../stripe';
+
 router.post('/api/payments', requireAuth, [
     body('token')
         .not()
@@ -29,11 +30,16 @@ router.post('/api/payments', requireAuth, [
         throw new InvalidRequestError('Cannot pay for a cancelled order!');
     }
 
-    await stripe.charges.create({
+    const charge = await stripe.charges.create({
         currency: 'usd',
         amount: order.price * 100,
         source: token
     });
+
+    const payment = Payments.build({
+        orderId,
+        stripeId: charge.id
+    })
 
     res.status(201).send({ success: true });
 })

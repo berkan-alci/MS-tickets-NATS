@@ -3,10 +3,11 @@ import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 
 declare global {
-    var signin: () => string[];
+    var signin: (id?: string) => string[];
 }
   
 jest.mock('../nats-wrapper');
+jest.mock('../stripe');
 
 
 let mongo: any;
@@ -32,8 +33,8 @@ afterAll(async () => {
     await mongoose.connection.close();
 }, 150000);
 
-global.signin = () => {
-    const token = jwt.sign({ id: new mongoose.Types.ObjectId().toHexString(), email: 'test@test.com' }, process.env.JWT_KEY!)
+global.signin = (id?: string) => {
+    const token = jwt.sign({ id: id || new mongoose.Types.ObjectId().toHexString(), email: 'test@test.com' }, process.env.JWT_KEY!)
     const sessionJSON = JSON.stringify({ jwt: token });
     const base64 = Buffer.from(sessionJSON).toString('base64');
 

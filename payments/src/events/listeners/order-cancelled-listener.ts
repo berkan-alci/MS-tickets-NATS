@@ -9,19 +9,25 @@ export default class OrderCancelledListener extends Listener <OrderCancelledEven
     queueGroupName = queueGroupName;
 
     async onMessage(data: OrderCancelledEvent['data'], msg: Message) {
-        const order = await Order.findOne({
-            _id: data.id,
-            version: data.version - 1,
-          });
-      
 
-        if (!order) {
-            throw new Error('Order not found!');
+        try {
+            const order = await Order.findOne({
+                _id: data.id,
+                version: data.version - 1,
+            });
+            
+            if (!order) {
+                throw new Error('Order not found!');
+            }
+    
+            order.set({ status: OrderStatus.Cancelled });
+    
+            await order.save();
+
+        } catch (err) {
+            console.log('here: ',err)
         }
-
-        order.set({ status: OrderStatus.Cancelled });
-
-        await order.save();
+        
         msg.ack();
     }
 }
